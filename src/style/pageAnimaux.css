@@ -1,0 +1,183 @@
+/* ANIMATIONS */
+@keyframes inscrire{
+    0%{
+        rotate: 0deg;
+    }
+    50%{
+        rotate: 5deg;
+    }
+    75%{
+        rotate: -5deg;
+    }
+    100%{
+        rotate: 2deg;
+    }
+}
+.titreAnimaux{
+    text-align: center;
+    width: 50%;
+    height: 80%;
+    margin: auto;
+    margin-top: 5%;
+    border-radius: 2%;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    h3{
+        margin: 3%;
+        padding: 3%;
+        background-color: rgba(15, 91, 66, 0.6);
+        border-radius: 2%;
+        transition: transform 0.3s ease-in-out;
+    }
+}
+.titreAnimauxSuivant{
+    text-align: center;
+    width: 50%;
+    height: 80%;
+    margin: auto;
+    margin-top: 5%;
+    border-radius: 2%;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    a{
+        text-decoration: none;
+        h3{ 
+        margin: 3%;
+        padding: 3%;
+        background-color: rgba(15, 91, 66, 0.6);
+        color: white;
+        font-weight: bold;
+        border-radius: 2%;
+        }
+    }
+}
+.titreAnimauxSuivant a:hover h3{
+    transition: transform 0.3s ease-in-out;
+    background-color: orange;
+    transform: scale(1.2);
+}
+
+.animauxPhotos{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    a{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 2% auto;
+        overflow: hidden;
+        text-decoration: none;
+        position: relative;
+        
+        img{
+            align-items: center;
+            width: 100%;
+            height: auto;
+            border-radius: 2%;     
+            object-fit: cover; 
+            transition: transform 0.3s ease-in-out;
+            width: 250px;
+            height: 250px;
+            
+        }
+        span{
+            margin-top: 5px;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: black;
+            background-color: rgba(15, 91, 66, 0.6);
+            text-align: center;
+            width: 100%; 
+            transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+        }
+    } 
+}
+.animauxPhotos a:hover img{
+    transform: scale(1.2);
+}
+.animauxPhotos a:hover span {
+    background-color: rgba(255, 165, 0, 0.8);/* Change de couleur au survol */
+    color: white;
+    transform: scale(2.2) translateY(-70px);    
+}
+.container{
+    h1{
+        text-align: center;
+        margin: 2%;
+        /* border: solid 2px black; */
+        background-color: antiquewhite;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    img{
+        width: 10vw;
+        height: 20vh;
+        text-align: center;
+        border: solid black 3px;
+        border-radius: 5px;
+        display: block;
+        margin: 0 auto;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    img:hover{
+        transition: transform 0.3s ease-in-out;
+        transform: scale(2.2);
+    }
+    .separe{
+        border: solid #9c9a9a 2px;
+        border-radius: 10px;
+        background-color: antiquewhite;
+        padding: 0.1%;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+        max-width: 40%;
+        margin: 2% auto;
+    }
+    #textDesc{
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 2%;
+        align-items: center;
+    }
+    #textDesc p:not(:last-child) {
+        border-right: solid 2px black; /* Bordure seulement sur le premier <p> */
+        padding-right: 10px ; /* Ajout d'un espace après la bordure */
+        
+    }
+    #description{
+        text-align: center;
+        margin: 2%;
+    }
+    a{
+        text-align: center;
+    }
+}
+@media screen and (max-width: 949px){ /* RESPONSIVE SUR ECRAN MOBILE*/
+    .animauxPhotos{
+        grid-template-columns: repeat(1,1fr);
+    }
+    .container{
+        h1{
+            margin-bottom: 5%;
+        }
+        img{
+            width: 200px;
+            height: 200px;
+            margin-bottom: 5%;
+        }
+        #textDesc{
+            margin-bottom: 5%;
+        }
+        #description{
+            margin: 2%;
+        }
+    }
+}
+
+
+
