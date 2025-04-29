@@ -202,6 +202,7 @@ if(isset($_POST['update_question']) && isset($_POST['id_question']) && isset($_P
 }
 
 //!Mise à jour des réponses d'une question
+//? (updateReponse)
 if(isset($_POST['update_reponses_question']) && isset($_POST['id_reponse']) && isset($_POST['id_question']) && isset($_POST['texte_reponse']) && isset($_POST['valid_reponse_radio']) ){
 
     $idQuestion = intval($_POST['id_question']);
@@ -216,7 +217,7 @@ if(isset($_POST['update_reponses_question']) && isset($_POST['id_reponse']) && i
 
         updateReponse($bdd, $idReponse, $texte, $isValid);
     }
-    $message = alert("Réponses mises à jour avec succès");
+    
     
     header("Location: ./controllerAdmin.php?action=liste_des_quizz&modifier_quizz=");
     exit;
@@ -224,6 +225,7 @@ if(isset($_POST['update_reponses_question']) && isset($_POST['id_reponse']) && i
 }
 
 //!Mise à jour de l'animal dans la question
+//? (deleteQRCodeAnimal) (rattacherQRCodeAnimal)
 if(isset($_POST['update_animal'])){
     $idQRCode = sanitize($_POST['id_qr_code']);
     $idAnimal = sanitize($_POST['id_animal']);
@@ -240,6 +242,17 @@ if(isset($_POST['update_animal'])){
     }
 }
 
+ //!Supprimer une question d'un quizz
+ //? (deleteQRCodeComplet)
+if (isset($_POST['delete_question'])){
+    $idQuestion = intval($_POST['id_question']);
+    $idJeuDePiste = intval($_POST['id_jeu_de_piste']);
+
+    deleteQRCodeComplet($bdd, $idQuestion);
+
+    header("Location: ./controllerAdmin.php?action=liste_des_quizz&modifier_quizz=$idJeuDePiste");
+    exit;
+}
 
 include "./view/admin/headerAdmin.php";
 include "./view/admin/view_admin.php";

@@ -10,12 +10,13 @@ function readUsers($bdd){
         $req->execute();
         $data = $req->fetchAll(PDO::FETCH_ASSOC);
 
-        $message= "";
+        $message= "
+        <h1>Liste des utilisateurs</h1>";
 
         foreach($data as $utilisateurs){
             $message = $message. "
-            <div style = 'border: solid black 2px; text-align: center; width: 60%; margin: auto; padding: 1%; background-color : whitesmoke;'>
-                <form method='POST' action='controllerAdmin.php'>                 
+            <div style = 'border: solid black 2px; text-align: center; width: 60%; margin: 10px auto; padding: 1%; background-color : whitesmoke;'>
+                <form method='POST' action='controllerAdmin.php' onsubmit='return confirm(\"Êtes-vous sûr de vouloir supprimer cet utilisateur ?\");'>                 
                     <p><strong>ID:</strong> {$utilisateurs['id_user']}</p>
                     <p><strong>Pseudo:</strong> {$utilisateurs['pseudo_user']}</p>
                     <p><strong>Email:</strong> {$utilisateurs['mail_user']}</p>
@@ -71,12 +72,16 @@ function readAnimal($bdd){
         $req->execute();
         $data = $req->fetchAll(PDO::FETCH_ASSOC);
 
-        $messageListe = "";
-
+        
+        if(empty($data)){
+            return "<p style='text-align: center; color:red;'>Aucun animal trouvé pour le moment.</p>";
+        }
+        $messageListe = "
+        <h1>Liste des animaux</h1>";
         foreach ($data as $animal){
             $messageListe = $messageListe. "
-            <div style = 'border: solid black 2px; text-align: center; width: 60%; margin: auto; padding: 1%; background-color : whitesmoke;'>
-                <form method='POST' action='controllerAjoutAnimauxAdmin.php'>            
+            <div style = 'border: solid black 2px; text-align: center; width: 60%; margin: 10px auto; padding: 1%; background-color : whitesmoke;'>
+                <form method='POST' action='controllerAjoutAnimauxAdmin.php' onsubmit='return confirm(\"Êtes-vous sûr de vouloir supprimer cet animal ?\");'> 
                     <p><strong>ID:</strong> {$animal['id_animal']}</p>
                     <p><strong>Nom:</strong> {$animal['nom_animal']}</p>
                     <p><strong>Espece:</strong> {$animal['espece_animal']}</p>
@@ -85,12 +90,13 @@ function readAnimal($bdd){
                     <img src ='{$animal['image_url']}' alt='Photo{$animal['nom_animal']}' style='max-width: 200px; max-height: 200px; object-fit: cover;'>
                     <br>
                     <input type='hidden' name='id_animal' value='{$animal['id_animal']}'>
-                    <button type='submit' name='deleteAnimal'>❌ Supprimer</button>
+                    <button type='submit' name='deleteAnimal'>❌ Supprimer l'animal de la base de données</button>
                 </form>
             </div>
             <br>
             <br>";
         }
+
         return $messageListe;
     }catch(Exception $e){
         return $e->getMessage();
@@ -167,9 +173,11 @@ function renderListeQuizz($bdd){
             return "<p style='text-align: center; color:red;'>Aucun quizz trouvé pour le moment.</p>";
         }
 
-        $html = '
-        <h2>Liste des quizz</h2>
-        
+        $messageListe = '
+        <h2>Liste des quizz</h2>';
+
+
+        $messageListe = $messageListe.'
         <table id="tableFormulaire">
             <thead>
                 <tr style="border: solid black 1px;">
@@ -194,7 +202,7 @@ function renderListeQuizz($bdd){
             $actif = (int)$qz['actif_jeu_de_piste'];
             $checked = $actif ===1 ? 'checked' : '';
 
-            $html .= "
+            $messageListe .= "
             <tr>
                 <td style='border: 1px solid black;background-color: #FFC0CB;'>$id</td>
                 <td style='border: 1px solid black;background-color: #ADD8E6;'>$nom</td>
@@ -202,13 +210,12 @@ function renderListeQuizz($bdd){
                 <td style='border: 1px solid black;background-color: #FFD700;'>$date</td>
                 <td style='border: 1px solid black;background-color: #FFB6C1;'>
                                 <!-- Formulaire de suppression -->
-                    <form method='POST' action='controllerAdmin.php' id='form-delete-$id'>
+                    <form method='POST' action='controllerAdmin.php' id='form-delete-$id' onsubmit='return confirm(\"Êtes-vous sûr de vouloir supprimer ce quizz ?\");'>
                         <input type='hidden' name='id_jeu_de_piste' value='$id'>
                         <input type='hidden' name='supprimer_ce_quizz' value='1'>
                         <button type='button' onclick=\"confirmDeletion($id)\">❌</button>
                     </form>
                 </td> 
-
                                     <!-- Formulaire de modification -->
                 <td style='border: solid black 1px; background-color: #c530ca;'>                               
                     <form method='POST' action='controllerAdmin.php?action=modifier_quizz' id='form-edit-$id'>
@@ -240,9 +247,9 @@ function renderListeQuizz($bdd){
             </label>
         ";
         }
-        $html .= '</tbody></table>';
+        $messageListe .= '</tbody></table>';
 
-        $html .= '
+        $messageListe .= '
         <form method="POST" action="controllerAdmin.php" style="text-align: center; margin-top: 20px;">
             <h3>Définir quizz actif :</h3>
             '.$radioInputs .'
@@ -250,7 +257,7 @@ function renderListeQuizz($bdd){
             <button type="submit" name="set_quizz_actif" style="margin-top: 10px;">Définir le quizz actif</button>
         </form>
         ';
-        return $html;
+        return $messageListe;
     }catch(Exception $e){
         return $e->getMessage();
     }
@@ -298,7 +305,7 @@ function deleteQuizzByID($bdd, $idQuizz){
     }
 }
 
-//!Fonction pour afficher les questions d'un quizz          OK
+//!Fonction pour afficher les questions, les réponses le qr code d'un quizz. Permet de modifier les questions, les réponses et changer l'animal associé. Permet de supprimer une question          OK
 function renderEditionQuizz($bdd, $idQuizz){
     try{
         //recupération du nom d'un quizz
@@ -316,19 +323,20 @@ function renderEditionQuizz($bdd, $idQuizz){
         $reqQuestions = $bdd->prepare("SELECT 
                 q.id_question,
                 q.titre_question,
-                q.texte_question,
                 qr.id_qr_code,
                 qr.code_qr_code,
                 qr.position_qr_code
-            FROM jeu_de_piste jp
-            JOIN contenir c ON jp.id_jeu_de_piste = c.id_jeu_de_piste
-            JOIN qr_code qr ON c.id_qr_code = qr.id_qr_code
-            JOIN associer a ON qr.id_qr_code = a.id_qr_code
-            JOIN question q ON a.id_question = q.id_question
+            FROM jeu_de_piste as jp
+            JOIN contenir as c ON jp.id_jeu_de_piste = c.id_jeu_de_piste
+            JOIN qr_code as qr ON c.id_qr_code = qr.id_qr_code
+            JOIN associer as a ON qr.id_qr_code = a.id_qr_code
+            JOIN question as q ON a.id_question = q.id_question
             WHERE jp.id_jeu_de_piste = :idQuizz
         ");
         $reqQuestions->execute([':idQuizz' => $idQuizz]);
         $questions = $reqQuestions->fetchAll(PDO::FETCH_ASSOC);
+
+        
 
         if(empty($questions)){
             $output .= "<p style='text-align: center; color:red;'>Aucune question trouvée pour ce quizz.</p>";
@@ -372,74 +380,87 @@ function renderEditionQuizz($bdd, $idQuizz){
                         <button type="submit" name="update_question">Modifier la question</button><br> 
                     </form>
                 ';
-                $output .='    
-                <div class="separateModif"></div>
-                ';
-                // Affichage du Qr code
-                if (!empty($question['code_qr_code'])){
-                    $qrImagePath = "public/qr_codes/" .$question["code_qr_code"] .".png";
-                    $output .= "<div id='qrQuestion'>
-                                    <h3>QR Code:</h3>
-                                    <p><strong>Code :</strong> " .$question["code_qr_code"]. " Position :".$question["position_qr_code"]."</p>
-                                    <strong>Qr code :</strong><br>
-                                    <img src='$qrImagePath' alt='QR Code' style='max-width: 150px; height: auto; border: solid 1px black;'/>
-                                    
-                                </div>";
-                }
-                $output .='    
-                <div class="separateModif"></div>
-                ';
-
-                // Affichage des réponses
-                $output .= "<h3>Réponses:</h3>
-                            <form method='POST' action='controllerAdmin.php'>
-                                <input type='hidden' name='id_question' value='".$question['id_question']."'>
-                                <ul id='ulReponses'>
-                                ";
-                                foreach ($reponses as $reponse) {
-                                    $valide = $reponse['valid_reponse'] ? "(✅ bonne réponse)" : "";
-                                    $output .= "
-                                        <div id='reponseModifierQuizz'>
-                                            <li>
-                                                <input type='hidden' name='id_reponse[]' value='".$reponse['id_reponse']."'>
-                                                
-                                                <label for='reponse_".$reponse['id_reponse']."'>Réponse:</label><br>
-                                                <input type='text' id='reponse_".$reponse["id_reponse"]."' name='texte_reponse[]' value='".htmlspecialchars($reponse['texte_reponse'])."' required><br>
-
-                                                <label>Bonne réponse :</label><br>
-                                                <input type='radio' name='valid_reponse_radio[".$question['id_question']."]' value='".$reponse['id_reponse']."' ".($reponse['valid_reponse'] ? "checked" : "").">
-                                                <span>Cocher pour définir comme bonne réponse</span><br>
-                                                $valide
-                                            </li>
-                                        </div>";
-                                } 
-                                $output .= "</ul>
-                                <div id='submitReponse'>
-                                    <button id='buttonReponse' type='submit' name='update_reponses_question'>Modifier toutes les réponses</button>
-                                </div>
-                            </form>";
-                
-                $output .='    
-                <div class="separateModif"></div>
-                ';
-                //Modification de l'animal associé
-                $output .="
-                <form id='formAnimal' method='POST' action='controllerAdmin.php'>
-                    <input type='hidden' name='id_qr_code' value'".$question['id_qr_code']."'>
-                    <h3 for='animal_".$question["id_question"]."'>Animal associé: </h3><br>
-                    <select name='id_animal' id='animal_".$question["id_question"]."'>";
-
-                    foreach($animaux as $animal){
-                        $selected = ($animalQR && $animalQR['id_animal'] == $animal['id_animal']) ? 'selected' : '';
-                        $output .= "<option value='".$animal['id_animal']."' $selected>".$animal['nom_animal']."</option>";
+                    $output .='    
+                    <div class="separateModif"></div>
+                    ';
+                    // Affichage du Qr code
+                    if (!empty($question['code_qr_code'])){
+                        $qrImagePath = "public/qr_codes/" .$question["code_qr_code"] .".png";
+                        $output .= "<div id='qrQuestion'>
+                                        <h3>QR Code:</h3>
+                                        <p><strong>Code :</strong> " .$question["code_qr_code"]. " Position :".$question["position_qr_code"]."</p>
+                                        <strong>Qr code :</strong><br>
+                                        <img src='$qrImagePath' alt='QR Code' style='max-width: 150px; height: auto; border: solid 1px black;'/>
+                                        
+                                    </div>";
                     }
-                    $output .="</select>
-                            <button type='submit' name='update_animal'>Modifier l'animal associé à la question</button>
-                    </form>
-                </div>";
-            }
-        }
+                    $output .='    
+                    <div class="separateModif"></div>
+                    ';
 
+                    // Affichage des réponses
+                    $output .= "<h3>Réponses:</h3>
+                                <form method='POST' action='controllerAdmin.php'>
+                                    <input type='hidden' name='id_question' value='".$question['id_question']."'>
+                                    <ul id='ulReponses'>
+                                    ";
+                                    foreach ($reponses as $reponse) {
+                                        $valide = $reponse['valid_reponse'] ? "(✅ bonne réponse)" : "";
+                                        $output .= "
+                                            <div id='reponseModifierQuizz'>
+                                                <li>
+                                                    <input type='hidden' name='id_reponse[]' value='".$reponse['id_reponse']."'>
+                                                    
+                                                    <label for='reponse_".$reponse['id_reponse']."'>Réponse:</label><br>
+                                                    <input type='text' id='reponse_".$reponse["id_reponse"]."' name='texte_reponse[]' value='".htmlspecialchars($reponse['texte_reponse'])."' required><br>
+
+                                                    <label>Bonne réponse :</label><br>
+                                                    <input type='radio' name='valid_reponse_radio[".$question['id_question']."]' value='".$reponse['id_reponse']."' ".($reponse['valid_reponse'] ? "checked" : "").">
+                                                    <span>Cocher pour définir comme bonne réponse</span><br>
+                                                    $valide
+                                                </li>
+                                            </div>";
+                                    } 
+                                    $output .= "</ul>
+                                    <div id='submitReponse'>
+                                        <button id='buttonReponse' type='submit' name='update_reponses_question'>Modifier toutes les réponses</button>
+                                    </div>
+                                </form>";
+                    
+                    $output .='    
+                    <div class="separateModif"></div>
+                    ';
+                    //Modification de l'animal associé
+                    $output .="
+                    <form id='formAnimal' method='POST' action='controllerAdmin.php'>
+                        <input type='hidden' name='id_qr_code' value='".$question['id_qr_code']."'>
+                        <h3 for='animal_".$question["id_question"]."'>Animal associé: </h3><br>
+                        <select name='id_animal' id='animal_".$question["id_question"]."'>";
+
+                        foreach($animaux as $animal){
+                            $selected = ($animalQR && $animalQR['id_animal'] == $animal['id_animal']) ? 'selected' : '';
+                            $output .= "<option value='".$animal['id_animal']."' $selected>".$animal['nom_animal']."</option>";
+                        }
+                        $output .="</select>
+                                <button type='submit' name='update_animal'>Modifier l'animal associé à la question</button>
+                        </form>
+                        
+                </div>";
+                                    //Suppression de la question
+                $output .='
+                <div id="formSuppressionQuestion">
+                    <form method="POST" action="controllerAdmin.php" onsubmit="return confirm(\'Êtes-vous sûr de vouloir supprimer cette question ?\');">
+                        <input type="hidden" name="id_question" value="'.$question["id_question"].'">
+                        <button type="submit" name="delete_question" style="background-color: red; color: white; padding: 0.5rem; border-radius: 5px;">
+                            🗑️ Supprimer cette question
+                        </button>
+                    </form>
+                </div>
+                <div class="separateModif"></div>
+                ';
+                
+            }  
+        }
         //Ajouter une nouvelle question au quizz
         $output .= "
         <div id='submitModifierQuizz'>
@@ -480,7 +501,7 @@ function renderFormulaireCreationQuestion($bdd, $idQuizz){
                 <input type='hidden' name='id_quizz' value='$idQuizz'>
                 <input type='hidden' name='qr_code' value='$qrContent'>
 
-                <label for='question'>Titre de la question :</label><br>
+                <label for='question'>Question :</label><br>
                 <textarea name='question' id='question' required></textarea><br>
 
                 <label>Réponses :</label><br>
@@ -604,6 +625,74 @@ function rattacherQRCodeAnimal($bdd, $idQRCode, $idAnimal){
 }
 
 
+//!Fonction qui supprime les réponses liées à une question
+function deleteReponse($bdd, $idQuestion){
+    try{
+        $req = $bdd->prepare("DELETE FROM reponse WHERE id_question = ?");
+        $req->bindParam(1, $idQuestion, PDO::PARAM_INT);
+        $req->execute();
+        return true; // Indique que la suppression a réussi
+    }catch(Exception $e){
+        return $e->getMessage();
+    }
+}
+//!Fonction qui supprime l'association avec le QR code
+function deleteAssocier($bdd, $idQuestion){
+    try{
+        $req = $bdd->prepare("DELETE FROM associer WHERE id_question = ?");
+        $req->bindParam(1, $idQuestion, PDO::PARAM_INT);
+        $req->execute();
+        return true; // Indique que la suppression a réussi
+    }catch(Exception $e){
+        return $e->getMessage();
+    }
+}
+//!Fonction qui supprime une question de la bdd
+function deleteQuestion($bdd, $idQuestion){
+    try{
+        $req = $bdd->prepare("DELETE FROM question WHERE id_question = ?");
+        $req->bindParam(1, $idQuestion, PDO::PARAM_INT);
+        $req->execute();
+        return true; // Indique que la suppression a réussi
+    }catch(Exception $e){
+        return $e->getMessage();
+    }
+}
+//!Fonction qui supprime un QR code de la bdd
+function deleteQRCode($bdd, $idQRCode){
+    try{
+        $req = $bdd->prepare("DELETE FROM qr_code WHERE id_qr_code = ?");
+        $req->bindParam(1, $idQRCode, PDO::PARAM_INT);
+        $req->execute();
+        return true; // Indique que la suppression a réussi
+    }catch(Exception $e){
+        return $e->getMessage();
+    }
+}
+
+function deleteQRCodeComplet($bdd, $idQuestion){
+    try{
+        $req = $bdd->prepare("SELECT id_qr_code FROM associer WHERE id_question = ?");
+        $req->execute([$idQuestion]);
+        $qrData= $req->fetch(PDO::FETCH_ASSOC);
+        $idQRCode = $qrData ? $qrData['id_qr_code'] : null;
+
+        deleteReponse($bdd, $idQuestion);
+        deleteAssocier($bdd, $idQuestion);
+        deleteQuestion($bdd, $idQuestion);
+
+        if($idQRCode) {
+            deleteQRCode($bdd, $idQRCode);
+            $qrImagePath = 'public/qr_codes/' . $idQRCode . '.png';
+            if (file_exists($qrImagePath)) {
+                unlink($qrImagePath); // Supprime le fichier QR code
+            }
+        }
+        return true; // Indique que la suppression a réussi
+    }catch (Exception $e){
+        return $e->getMessage();
+    }
+}
 
 //!Fonction qui génère un QR code et l'enregistre dans le dossier   OK
 function genererQRCode($contenu, $nomFichier){

@@ -32,7 +32,7 @@ function readUserByMail($bdd, $email){
 
 //! Inscription Utilisateur
 function addUser($bdd, $pseudo, $email, $password){
-    $id_role = 1; //1 = utilisateur  2 = admin
+    $id_role = 2; //1 = utilisateur  2 = admin
     try {
         //!Verification du mail existant
         $req = $bdd->prepare("SELECT mail_user FROM users WHERE mail_user =? LIMIT 1");
