@@ -1,3 +1,4 @@
+console.log("script chargé");
 //GESTION MENU BURGER//
 // Gestion des sous  menus pour fermer l'un lorsque l'autre s'ouvre
 document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function (element) {
@@ -18,6 +19,23 @@ document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function
             nextMenu.classList.toggle('show');
         }
     });
+});
+
+//Gestion de l'image API
+document.getElementById('newAnimalBtn').addEventListener('click', function() {
+    fetch('index.php?action=new_cat')
+        .then(reponse => reponse.json())
+        .then(data => {
+            console.log(data);
+            if(data.url) {
+                document.getElementById('animalImage').src = data.url;
+            } else {
+                alert('Erreur lors de la récupération du nouveau chat.');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+        });
 });
 
 //IMPOSSIBLE D'ACCEDER AU JEU DEPUIS GRAND ECRAN

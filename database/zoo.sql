@@ -27,6 +27,7 @@ CREATE TABLE jeu_de_piste(
 	id_jeu_de_piste INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	name_jeu_de_piste VARCHAR(50) UNIQUE COLLATE utf8mb4_unicode_ci,
 	description_jeu_de_piste TEXT COLLATE utf8mb4_unicode_ci,
+    actif_jeu_de_piste BOOLEAN,
 	date_jeu_de_piste DATE
 )ENGINE=InnoDB;
 

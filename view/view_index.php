@@ -51,6 +51,10 @@
         <p id="messagePHP"><?php echo $message; ?></p>
     </div>
     <hr>
+
+
+
+
                 <!--CAROUSEL PARC-->
     <div id="carouselParc" class="carousel slide">
         <div class="carousel-inner">
@@ -79,3 +83,15 @@
         <a href="#"><img src="images/carouselParc2.png" alt="carouselParc2"></a>
         <a href="#"><img src="images/carouselParc3.png" alt="carouselParc3"></a>
     </div>
+
+
+    <hr>
+    <?php if($animalData): ?>
+        <div class="animalHasard">
+            <h2>Un chat au hasard</h2>
+            <img id="animalImage"src="<?php echo $image_url; ?>" alt="animalHasard" class="animalHasardImage">
+            <br>
+            <button id="newAnimalBtn">Un autre Chat 🐾</button>
+            <p>Nous aimons tellement les chats, que nous sommes contraint de vous faire profiter de leurs photos !</p>
+        </div>
+    <?php endif; ?>

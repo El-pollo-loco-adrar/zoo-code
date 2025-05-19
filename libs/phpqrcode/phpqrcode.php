@@ -73,9 +73,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
- 
+
 	// Encoding modes
-	 
+
 	define('QR_MODE_NUL', -1);
 	define('QR_MODE_NUM', 0);
 	define('QR_MODE_AN', 1);
@@ -2160,7 +2160,7 @@
                         $q++;
                     }
                     $dif = QRinput::estimateBitsMode8($p)  // + 4 + l8
-                         + QRinput::estimateBitsModeAn($q - $p) + 4 + $la
+                        + QRinput::estimateBitsModeAn($q - $p) + 4 + $la
                          - QRinput::estimateBitsMode8($q); // - 4 - l8
                     if($dif < 0) {
                         break;

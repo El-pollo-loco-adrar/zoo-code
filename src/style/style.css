@@ -158,7 +158,6 @@ header{
         position: absolute;
         align-self: center;
         left: 20px;
-       
         .dropdown-menu .dropdown-menu { /*Sous menus*/
             background-color: white;
             .dropdown-item{
@@ -258,6 +257,45 @@ header{
     #messagePHP{
         color: red;
     }
+}
+
+/*CHAT AU HASARD*/
+.animalHasard{
+    width: 60%;
+    margin: 3% auto;
+    padding: 2%;
+    background-color: #F5EFE6;
+    border-radius: 2%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    h2{
+        text-align: center;
+        margin-bottom: 3%;
+    }
+    p{
+        text-align: center;
+        margin: 0 5%;
+    }
+}
+.animalHasardImage{
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+    box-shadow: 0010px rgba(0,0,0,0.2);
+}
+#newAnimalBtn{
+        padding: 10px;
+        margin: 15px;
+        background-color: orange;
+        border: none;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
 }
 
 
@@ -575,3 +613,18 @@ form{
     }
 }
 
+@media screen and (max-width: 600px) {
+    .animalHasardImage {
+        width: 150px;
+        height: 150px;
+    }
+
+    #newAnimalBtn {
+        width: 80%;
+        font-size: 14px;
+    }
+
+    .animalHasard h2 {
+        font-size: 18px;
+    }
+}
