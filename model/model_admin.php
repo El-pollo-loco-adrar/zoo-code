@@ -297,6 +297,32 @@ function checkNameQuizz($bdd, $nomQuizz){
 //!Fonction qui supprime un quizz
 function deleteQuizzByID($bdd, $idQuizz){
     try{
+        //1 Récupérer les qr_code associés au jeu de piste
+        $req = $bdd->prepare("SELECT id_qr_code FROM contenir WHERE id_jeu_de_piste = ?");
+        $req->execute([$idQuizz]);
+        $qrCodes= $req->fetchAll(PDO::FETCH_COLUMN);
+
+        //2 Supprimer les questions liés au QR code
+        if(!empty($qrCodes)){
+            $placeholders = implode(',', array_fill(0, count($qrCodes), '?'));
+
+            //Récupérer les questions liés au qr code
+            $reqQ = $bdd->prepare("SELECT id_question FROM associer WHERE id_qr_code IN ($placeholders)");
+            $reqQ->execute($qrCodes);
+            $question = $reqQ->fetchAll(PDO::FETCH_COLUMN);
+
+            //Supprimer les questions
+            if(!empty($question)){
+                $placeholdersQ = implode(',', array_fill(0, count($question), '?'));
+                $delQ = $bdd->prepare("DELETE FROM question WHERE id_question IN ($placeholdersQ)");
+                $delQ->execute($question);
+            }
+
+            //Supprimer les QR code
+            $del = $bdd->prepare("DELETE FROM qr_code WHERE id_qr_code IN ($placeholders)");
+            $del->execute($qrCodes);
+        }
+        //3 Supprimer le jeu de piste
         $req = $bdd->prepare("DELETE FROM jeu_de_piste WHERE id_jeu_de_piste = ?");
         $req->execute([$idQuizz]);
         return "<p style='color:green;'>Quizz supprimé avec succès !</p>";

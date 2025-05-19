@@ -6,6 +6,7 @@
         <h1>Bonjour <?= $_SESSION["pseudo_user"];?></h1>
         <div id="startJeu">
             <h3>Prêt à débuter l'aventure?</h3>
+            <a href="."></a>
             <button id="startScanner">📷 Scanner le QR Code</button>
             <div id="qr-reader" style="width: 300px; margin: auto;"></div>
         </div>

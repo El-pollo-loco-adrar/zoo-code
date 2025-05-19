@@ -59,3 +59,4 @@ function addUser($bdd, $pseudo, $email, $password){
         return $e->getMessage();
     }
 }
+?><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo cum debitis accusantium perferendis, ducimus adipisci id. Ipsum aliquid consectetur molestiae ratione aliquam quasi? Accusantium temporibus sit provident, soluta aspernatur saepe.</p>
